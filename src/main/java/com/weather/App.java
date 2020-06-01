@@ -35,9 +35,12 @@ public final class App {
      * @param args longitude,latitude comming from command line
      */
     public static void main(String[] args) {
-        ForeCastRequestDetail foreCastDetail = fetchPoint(args[0]);
-        fetchForeCastAndPrint(foreCastDetail, 5);
-
+        if (args.length > 0 && args[0].contains(",")) {
+            String input = args[0].replaceAll("\\s+", "").trim();
+            ForeCastRequestDetail foreCastDetail = fetchPoint(input);
+            fetchForeCastAndPrint(foreCastDetail, 5);
+        } else
+            System.out.println("Invalid Arguments");
     }
 
     /**
