@@ -1,6 +1,5 @@
 package com.weather;
 
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -9,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.net.URL;
 import java.util.Map;
-import java.util.Properties;
 import java.util.ResourceBundle;
 
 import org.geojson.Feature;
@@ -34,15 +32,21 @@ public final class App {
      * Prints the weather for cast for next 5 days
      * 
      * 
-     * @param args longitude,latitude .
+     * @param args longitude,latitude comming from command line
      */
     public static void main(String[] args) {
         ForeCastRequestDetail foreCastDetail = fetchPoint(args[0]);
-        fetchForeCast(foreCastDetail, 5);
+        fetchForeCastAndPrint(foreCastDetail, 5);
 
     }
 
-    private static void fetchForeCast(ForeCastRequestDetail foreCastDetail, int n) {
+    /**
+     * fetch 5 days forecast and print that on console
+     * 
+     * @param foreCastDetail
+     * @param no             Number of days
+     */
+    private static void fetchForeCastAndPrint(ForeCastRequestDetail foreCastDetail, int n) {
 
         ArrayList list = new ArrayList<>();
         try {
@@ -54,10 +58,11 @@ public final class App {
             Feature feature = new ObjectMapper().readValue(conn.getInputStream(), Feature.class);
             Map<String, Object> properties = feature.getProperties();
             list = (ArrayList) properties.get("periods");
-            System.out.println("Next Five Day Forecast");
+            System.out.println("Next Five Day Forecast" + "\n");
             list.stream().limit(n).forEach(item -> {
                 Map map = (Map) item;
                 System.out.println("Day " + map.get("number") + " --> " + (String) map.get("detailedForecast"));
+                System.out.println("\n");
             });
 
         } catch (Exception e) {
@@ -66,6 +71,12 @@ public final class App {
 
     }
 
+    /**
+     * Method Fetch Forecast details like Point and forecast office
+     * 
+     * @param coordinates
+     * @return
+     */
     private static ForeCastRequestDetail fetchPoint(String coordinates) {
         int gridX = 0, gridY = 0;
         String forecastOffice = "";

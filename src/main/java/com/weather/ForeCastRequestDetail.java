@@ -1,5 +1,8 @@
 package com.weather;
 
+/**
+ * Class Acts as Request for Fetching Forecast details
+ */
 public class ForeCastRequestDetail {
     String gridX;
     String gridY;
